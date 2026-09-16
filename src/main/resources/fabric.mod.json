@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "cosmictweaks",
+  "version": "${version}",
+  "name": "Cosmic Tweaks",
+  "description": "A modular Fabric 1.21.11 HUD and gameplay tweak mod.",
+  "authors": [
+    "YourName"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.cosmictweaks.CosmicTweaks"
+    ],
+    "client": [
+      "com.cosmictweaks.CosmicTweaksClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.21.11",
+    "java": ">=21"
+  }
+}
