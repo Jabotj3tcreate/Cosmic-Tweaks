@@ -1,0 +1,9 @@
+{
+  "category": "key.categories.cosmictweaks",
+  "keys": {
+    "key.cosmictweaks.fullbright": "Toggle Fullbright",
+    "key.cosmictweaks.zoom": "Toggle Zoom",
+    "key.cosmictweaks.settings": "Open Cosmic Settings",
+    "category.cosmictweaks": "Cosmic Tweaks"
+  }
+}

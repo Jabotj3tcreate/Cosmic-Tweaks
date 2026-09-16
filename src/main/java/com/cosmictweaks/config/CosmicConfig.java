@@ -1,7 +1,7 @@
 package com.cosmictweaks.config;
 
 public class CosmicConfig {
-    public boolean modularHud = true;
+    public boolean moduleHudEditor = true;
     public boolean showKeystrokes = true;
     public boolean showCps = true;
     public boolean showFps = true;
@@ -11,18 +11,22 @@ public class CosmicConfig {
     public boolean showPotions = true;
     public boolean showDurability = true;
     public boolean showClock = true;
+    public boolean showZoom = true;
+    public boolean showCrosshair = true;
     public boolean showCompass = true;
     public boolean showItemHud = true;
-    public boolean showCrosshair = true;
-    public boolean showFullbright = false;
-    public boolean toggleSprint = true;
-    public boolean toggleSneak = true;
+    public boolean showScoreboard = true;
+    public boolean showChat = true;
     public boolean showWaypoints = false;
+    public boolean fullbright = false;
+    public boolean sprintToggle = true;
+    public boolean sneakToggle = true;
+    public boolean freelook = false;
 
-    public static CosmicConfig INSTANCE = new CosmicConfig();
+    public static final CosmicConfig INSTANCE = new CosmicConfig();
 
     public static void applyDefaults() {
-        INSTANCE = new CosmicConfig();
+        // Defaults are already defined in the instance.
     }
 
     public static CosmicConfig get() {
