@@ -30,14 +30,14 @@ public final class Keybinds {
                 "key.cosmictweaks.zoom",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
-                "category.cosmictweaks"
+                CATEGORY
         ));
 
         openSettings = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.cosmictweaks.settings",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_O,
-                "category.cosmictweaks"
+                CATEGORY
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
