@@ -68,7 +68,7 @@ public final class CosmicSettingsScreen extends Screen {
 
     @Override
     public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
-        if (!click.button().equals(net.minecraft.client.gui.Click.Type.LEFT)) {
+        if (click.button() != 0) {
             return super.mouseClicked(click, doubled);
         }
 
