@@ -3,22 +3,14 @@
   "id": "cosmictweaks",
   "version": "${version}",
   "name": "Cosmic Tweaks",
-  "description": "A modular Fabric 1.21.11 HUD and gameplay tweak mod.",
-  "authors": [
-    "YourName"
-  ],
+  "description": "A lightweight client-side utility HUD and quality-of-life mod for Minecraft 1.21.11.",
+  "authors": ["Jabotj3tcreate"],
   "license": "MIT",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      "com.cosmictweaks.CosmicTweaks"
-    ],
-    "client": [
-      "com.cosmictweaks.CosmicTweaksClient"
-    ]
-  },
+  "environment": "client",
+  "entrypoints": {"client": ["com.cosmictweaks.CosmicTweaksClient"]},
   "depends": {
-    "fabricloader": ">=0.16.0",
+    "fabricloader": ">=0.18.4",
+    "fabric-api": ">=0.141.3+1.21.11",
     "minecraft": "1.21.11",
     "java": ">=21"
   }
