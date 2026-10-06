@@ -22,14 +22,10 @@ public class CosmicConfig {
     public boolean sprintToggle = true;
     public boolean sneakToggle = true;
     public boolean freelook = false;
+    public double zoomFov = 30.0;
 
     public static final CosmicConfig INSTANCE = new CosmicConfig();
 
-    public static void applyDefaults() {
-        // Defaults are already defined in the instance.
-    }
-
-    public static CosmicConfig get() {
-        return INSTANCE;
-    }
+    public static void applyDefaults() {}
+    public static CosmicConfig get() { return INSTANCE; }
 }
