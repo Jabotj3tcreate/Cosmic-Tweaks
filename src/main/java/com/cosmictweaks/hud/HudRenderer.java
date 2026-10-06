@@ -8,7 +8,6 @@ import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFW;
 
 public class HudRenderer implements HudRenderCallback {
     private static final int WHITE = 0xFFFFFFFF;
