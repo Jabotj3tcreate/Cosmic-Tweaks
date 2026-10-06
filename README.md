@@ -4,6 +4,10 @@ Cosmic Tweaks is a lightweight, client-side Fabric utility mod for Minecraft 1.2
 
 ## Current features
 
+- OneClient-inspired persistent JSON configuration
+- Live WASD + mouse keystrokes HUD
+- Armor HUD with durability values
+
 - FPS display
 - Ping display
 - Coordinates
