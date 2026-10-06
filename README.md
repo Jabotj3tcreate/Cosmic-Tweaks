@@ -1,43 +1,39 @@
 # Cosmic Tweaks
 
-A Fabric 1.21.11 client-side utility mod with a modular HUD, custom overlays, and gameplay toggles.
+Cosmic Tweaks is a lightweight, client-side Fabric utility mod for Minecraft 1.21.11.
 
-## Features planned
+## Current features
 
-- Modular HUD editor
-- Keystrokes
-- CPS counter
 - FPS display
 - Ping display
 - Coordinates
-- Armor status
-- Potion effects
-- Item durability
-- Clock
-- Zoom
-- Custom crosshair
-- Toggle sprint/sneak
-- Item HUD
 - Direction/compass
-- Scoreboard customization
-- Chat customization
-- Fullbright
-- Freelook where technically possible
+- World clock
+- Basic HUD toggles
+- Fullbright toggle
+- Zoom keybind placeholder
+- Cosmic Tweaks settings screen
+
+## Planned features
+
+- Proper keystrokes display and CPS counter
+- Armor and item durability HUD
+- Potion effects HUD
+- Custom crosshair
+- Item HUD
+- Scoreboard/chat customization
 - Waypoints
-- Cosmic HUD customization
-- In-game settings/editor
+- Freelook where technically possible
+- HUD editor and draggable modules
+- Persistent config
+- Cosmic-themed UI
 
-## Quick start
+## Build
 
-1. Open the project in IntelliJ IDEA or VS Code.
-2. Let Gradle download the Fabric dependencies.
-3. Run the Fabric client configuration from your IDE.
-4. Extend the modules under `src/main/java/com/cosmictweaks`.
+This project uses Java 21, Fabric Loom remap, Yarn mappings, and Fabric API for Minecraft 1.21.11.
 
-## Project layout
+Run `gradle build` from the project root. The finished JAR is created in `build/libs/`.
 
-- `src/main/java/com/cosmictweaks/CosmicTweaks.java` - Mod bootstrap
-- `src/main/java/com/cosmictweaks/CosmicTweaksClient.java` - Client setup and registration
-- `src/main/java/com/cosmictweaks/config/CosmicConfig.java` - Toggle/config storage
-- `src/main/java/com/cosmictweaks/hud/HudRenderer.java` - HUD overlay rendering
-- `src/main/resources/fabric.mod.json` - Fabric metadata
+## Install
+
+Install Fabric for Minecraft 1.21.11, then place the built `cosmictweaks-*.jar` in your `mods` folder alongside Fabric API.
