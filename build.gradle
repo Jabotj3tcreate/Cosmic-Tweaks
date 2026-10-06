@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.8.12'
+    id 'net.fabricmc.fabric-loom-remap' version '1.17.12'
     id 'maven-publish'
 }
 
@@ -11,8 +11,8 @@ base {
 }
 
 repositories {
-    maven { url = uri("https://maven.fabricmc.net") }
     mavenCentral()
+    maven { url = uri("https://maven.fabricmc.net") }
 }
 
 dependencies {
@@ -23,22 +23,26 @@ dependencies {
 }
 
 java {
-    withSourcesJar()
-    withJavadocJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
-    it.options.release = 21
+    options.encoding = "UTF-8"
+    options.release = 21
 }
 
 processResources {
     inputs.property "version", project.version
-
     filesMatching("fabric.mod.json") {
         expand "version": project.version
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
     }
 }
