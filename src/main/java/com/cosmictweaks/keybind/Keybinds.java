@@ -2,6 +2,7 @@ package com.cosmictweaks.keybind;
 
 import com.cosmictweaks.CosmicTweaks;
 import com.cosmictweaks.CosmicTweaksClient;
+import com.cosmictweaks.config.CosmicConfig;
 import com.cosmictweaks.screen.CosmicSettingsScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -34,6 +35,7 @@ public final class Keybinds {
             if (toggleFullbright.wasPressed()) {
                 CosmicTweaksClient.CONFIG.fullbright = !CosmicTweaksClient.CONFIG.fullbright;
                 applyFullbright(client);
+                CosmicConfig.save();
             }
 
             boolean zooming = CosmicTweaksClient.CONFIG.showZoom && toggleZoom.isPressed();
