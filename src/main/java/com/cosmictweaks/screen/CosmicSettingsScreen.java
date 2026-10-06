@@ -67,9 +67,13 @@ public final class CosmicSettingsScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button != 0) return super.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(net.minecraft.client.gui.Click click, boolean doubled) {
+        if (!click.button().equals(net.minecraft.client.gui.Click.Type.LEFT)) {
+            return super.mouseClicked(click, doubled);
+        }
 
+        double mouseX = click.x();
+        double mouseY = click.y();
         int left = (this.width - PANEL_WIDTH) / 2;
         int top = Math.max(12, (this.height - 280) / 2);
         int x = left + (PANEL_WIDTH - BUTTON_WIDTH) / 2;
@@ -96,22 +100,22 @@ public final class CosmicSettingsScreen extends Screen {
         }
         y += BUTTON_HEIGHT + GAP;
         if (inside(mouseX, mouseY, x, y)) {
-            close(); return true;
+            closeScreen(); return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
-            close();
+    public boolean keyPressed(net.minecraft.client.input.KeyInput input) {
+        if (input.key() == 256) {
+            closeScreen();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
-    private void close() {
-        if (this.client != null) this.client.setScreen(parent);
+    private void closeScreen() {
+        if (this.client != null) this.client.setScreen(this.parent);
     }
 
     private static boolean inside(double mouseX, double mouseY, int x, int y) {
