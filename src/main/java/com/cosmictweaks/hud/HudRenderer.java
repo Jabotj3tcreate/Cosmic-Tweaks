@@ -25,7 +25,7 @@ public class HudRenderer implements HudRenderCallback {
         int y = 8;
 
         if (CosmicTweaksClient.CONFIG.showFps) {
-            drawText(context, "FPS: " + client.getWindow().getFps(), x, y);
+            drawText(context, "FPS: " + client.getCurrentFps(), x, y);
             y += 12;
         }
 
