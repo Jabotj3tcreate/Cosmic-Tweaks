@@ -33,7 +33,7 @@ public final class HudEditorScreen extends Screen {
     public void render(DrawContext c, int mx, int my, float delta) {
         c.fill(0, 0, width, height, 0xFF080B10);
 
-        int canvasRight = width - SIDE;
+        int canvasRight = width;
         c.fill(0, TOP, canvasRight, height - BOTTOM, 0xFF0B1017);
 
         for (int x = 0; x <= canvasRight; x += GRID)
@@ -50,7 +50,7 @@ public final class HudEditorScreen extends Screen {
         c.fill(0, TOP - 1, width, TOP, 0xFF364252);
         c.drawTextWithShadow(textRenderer, Text.literal("COSMIC TWEAKS"), 18, 12, 0xFFFFFFFF);
         c.drawTextWithShadow(textRenderer, Text.literal("HUD EDITOR  •  LIVE LAYOUT"), 18, 31, 0xFF8A96A7);
-        c.drawTextWithShadow(textRenderer, Text.literal(snap ? "SNAP 8PX" : "FREE MOVE"), canvasRight - 94, 23, 0xFFB9C4D1);
+        c.drawTextWithShadow(textRenderer, Text.literal(snap ? "SNAP 8PX" : "FREE MOVE"), width - SIDE - 94, 23, 0xFFB9C4D1);
 
         for (Entry e : entries()) drawModule(c, e, mx, my);
         drawSidebar(c, mx, my, canvasRight);
@@ -172,7 +172,7 @@ public final class HudEditorScreen extends Screen {
         c.drawTextWithShadow(textRenderer, Text.literal(s), x, y, visible ? 0xFFFFFFFF : 0xFF687587);
     }
 
-    private List<Entry> entries() {
+    private int defaultY(String id) {\n        return switch (id) {\n            case "KEYSTROKES" -> Math.max(TOP + 8, height - 78);\n            case "CPS" -> Math.max(TOP + 8, height - 102);\n            case "EQUIPMENT" -> Math.max(TOP + 8, height - 80);\n            default -> switch (id) {\n                case "FPS" -> 8; case "PING" -> 20; case "COORDINATES" -> 32;\n                case "FACING" -> 44; case "CLOCK" -> 56; default -> 8;\n            };\n        };\n    }\n\n    private ModulePosition position(Entry e) {\n        return HudLayout.get(e.id(), e.defaultX(), defaultY(e.id()));\n    }\n\n    private List<Entry> entries() {
         return List.of(
                 new Entry("FPS", "FPS", 80, 24, 8, 8),
                 new Entry("PING", "PING", 88, 24, 8, 20),
@@ -251,7 +251,7 @@ public final class HudEditorScreen extends Screen {
         }
 
         int canvasRight = width - SIDE;
-        p.x = Math.max(2, Math.min(canvasRight - e.w() * s - 2, x));
+        p.x = Math.max(2, Math.min(width - e.w() * s - 2, x));
         p.y = Math.max(TOP + 2, Math.min(height - BOTTOM - e.h() * s - 2, y));
         return true;
     }
