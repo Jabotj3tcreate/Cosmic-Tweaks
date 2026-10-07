@@ -72,8 +72,6 @@ public class HudRenderer implements HudRenderCallback {
         if (ModuleManager.armor() || ModuleManager.durability()) {
             renderEquipment(context, client);
         }
-
-        CosmicHudBranding.render(context, client);
     }
 
     private void updateClicks(MinecraftClient client) {
@@ -127,14 +125,9 @@ public class HudRenderer implements HudRenderCallback {
     private void renderEquipment(DrawContext context, MinecraftClient client) {
         int x = thisWidth(client) - 92;
         int y = thisHeight(client) - 80;
-
         EquipmentSlot[] armorSlots = {
-                EquipmentSlot.HEAD,
-                EquipmentSlot.CHEST,
-                EquipmentSlot.LEGS,
-                EquipmentSlot.FEET
+                EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
         };
-
         for (EquipmentSlot slot : armorSlots) {
             ItemStack stack = client.player.getEquippedStack(slot);
             if (ModuleManager.armor()) context.drawItem(stack, x, y);
@@ -147,13 +140,8 @@ public class HudRenderer implements HudRenderCallback {
         }
     }
 
-    private int thisWidth(MinecraftClient client) {
-        return client.getWindow().getScaledWidth();
-    }
-
-    private int thisHeight(MinecraftClient client) {
-        return client.getWindow().getScaledHeight();
-    }
+    private int thisWidth(MinecraftClient client) { return client.getWindow().getScaledWidth(); }
+    private int thisHeight(MinecraftClient client) { return client.getWindow().getScaledHeight(); }
 
     private void drawText(DrawContext context, String text, int x, int y, int color) {
         context.drawText(MinecraftClient.getInstance().textRenderer, text, x, y, color, true);
