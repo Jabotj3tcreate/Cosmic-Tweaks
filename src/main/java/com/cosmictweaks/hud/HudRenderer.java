@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
@@ -126,8 +127,16 @@ public class HudRenderer implements HudRenderCallback {
     private void renderEquipment(DrawContext context, MinecraftClient client) {
         int x = thisWidth(client) - 92;
         int y = thisHeight(client) - 80;
-        for (int i = 3; i >= 0; i--) {
-            ItemStack stack = client.player.getInventory().getArmorStack(i);
+
+        EquipmentSlot[] armorSlots = {
+                EquipmentSlot.HEAD,
+                EquipmentSlot.CHEST,
+                EquipmentSlot.LEGS,
+                EquipmentSlot.FEET
+        };
+
+        for (EquipmentSlot slot : armorSlots) {
+            ItemStack stack = client.player.getEquippedStack(slot);
             if (ModuleManager.armor()) context.drawItem(stack, x, y);
             if (ModuleManager.durability() && !stack.isEmpty() && stack.isDamageable()) {
                 int remaining = stack.getMaxDamage() - stack.getDamage();
@@ -138,8 +147,13 @@ public class HudRenderer implements HudRenderCallback {
         }
     }
 
-    private int thisWidth(MinecraftClient client) { return client.getWindow().getScaledWidth(); }
-    private int thisHeight(MinecraftClient client) { return client.getWindow().getScaledHeight(); }
+    private int thisWidth(MinecraftClient client) {
+        return client.getWindow().getScaledWidth();
+    }
+
+    private int thisHeight(MinecraftClient client) {
+        return client.getWindow().getScaledHeight();
+    }
 
     private void drawText(DrawContext context, String text, int x, int y, int color) {
         context.drawText(MinecraftClient.getInstance().textRenderer, text, x, y, color, true);
