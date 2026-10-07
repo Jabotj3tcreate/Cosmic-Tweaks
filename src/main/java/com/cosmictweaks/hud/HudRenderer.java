@@ -1,6 +1,7 @@
 package com.cosmictweaks.hud;
 
 import com.cosmictweaks.CosmicTweaksClient;
+import com.cosmictweaks.module.ModuleManager;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -9,10 +10,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 public class HudRenderer implements HudRenderCallback {
     private static final int WHITE = 0xFFFFFFFF;
     private static final int MUTED = 0xFFB7C1CE;
     private static final int PANEL = 0xB8141A22;
+    private static final Deque<Long> LEFT_CLICKS = new ArrayDeque<>();
+    private static final Deque<Long> RIGHT_CLICKS = new ArrayDeque<>();
+    private static boolean leftWasDown;
+    private static boolean rightWasDown;
 
     public static void register() {
         HudRenderCallback.EVENT.register(new HudRenderer());
@@ -23,14 +31,15 @@ public class HudRenderer implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.player == null || client.world == null) return;
 
+        updateClicks(client);
         int x = 8;
         int y = 8;
 
-        if (CosmicTweaksClient.CONFIG.showFps) {
+        if (ModuleManager.fps()) {
             drawText(context, "FPS  " + client.getCurrentFps(), x, y, WHITE);
             y += 12;
         }
-        if (CosmicTweaksClient.CONFIG.showPing) {
+        if (ModuleManager.ping()) {
             int ping = 0;
             if (client.getNetworkHandler() != null) {
                 var entry = client.getNetworkHandler().getPlayerListEntry(client.player.getUuid());
@@ -39,7 +48,7 @@ public class HudRenderer implements HudRenderCallback {
             drawText(context, "PING  " + ping + "ms", x, y, WHITE);
             y += 12;
         }
-        if (CosmicTweaksClient.CONFIG.showCoordinates) {
+        if (ModuleManager.coordinates()) {
             BlockPos pos = client.player.getBlockPos();
             drawText(context, "XYZ  " + pos.getX() + "  " + pos.getY() + "  " + pos.getZ(), x, y, WHITE);
             y += 12;
@@ -53,12 +62,41 @@ public class HudRenderer implements HudRenderCallback {
             drawText(context, "WORLD  " + String.format("%05d", time), x, y, MUTED);
         }
 
-        if (CosmicTweaksClient.CONFIG.showKeystrokes) {
+        if (ModuleManager.keystrokes()) {
             renderKeystrokes(context, client);
         }
-        if (CosmicTweaksClient.CONFIG.showArmor || CosmicTweaksClient.CONFIG.showDurability) {
+        if (ModuleManager.cps()) {
+            renderCps(context, client);
+        }
+        if (ModuleManager.armor() || ModuleManager.durability()) {
             renderEquipment(context, client);
         }
+
+        CosmicHudBranding.render(context, client);
+    }
+
+    private void updateClicks(MinecraftClient client) {
+        long now = System.currentTimeMillis();
+        long handle = client.getWindow().getHandle();
+        boolean left = GLFW.glfwGetMouseButton(handle, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
+        boolean right = GLFW.glfwGetMouseButton(handle, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+        if (left && !leftWasDown) LEFT_CLICKS.addLast(now);
+        if (right && !rightWasDown) RIGHT_CLICKS.addLast(now);
+        leftWasDown = left;
+        rightWasDown = right;
+        prune(LEFT_CLICKS, now);
+        prune(RIGHT_CLICKS, now);
+    }
+
+    private void prune(Deque<Long> clicks, long now) {
+        while (!clicks.isEmpty() && now - clicks.peekFirst() > 1000L) clicks.removeFirst();
+    }
+
+    private void renderCps(DrawContext context, MinecraftClient client) {
+        int x = 8;
+        int y = thisHeight(client) - 102;
+        drawText(context, "LMB " + LEFT_CLICKS.size() + " CPS", x, y, WHITE);
+        drawText(context, "RMB " + RIGHT_CLICKS.size() + " CPS", x, y + 12, MUTED);
     }
 
     private void renderKeystrokes(DrawContext context, MinecraftClient client) {
@@ -79,9 +117,10 @@ public class HudRenderer implements HudRenderCallback {
         boolean pressed = input >= GLFW.GLFW_MOUSE_BUTTON_1
                 ? GLFW.glfwGetMouseButton(handle, input) == GLFW.GLFW_PRESS
                 : GLFW.glfwGetKey(handle, input) == GLFW.GLFW_PRESS;
-        context.fill(x, y, x + (label.length() > 2 ? 40 : 22), y + 20, pressed ? 0xFF3B4655 : PANEL);
+        int width = label.length() > 2 ? 40 : 22;
+        context.fill(x, y, x + width, y + 20, pressed ? 0xFF3B4655 : PANEL);
         context.drawCenteredTextWithShadow(client.textRenderer, net.minecraft.text.Text.literal(label),
-                x + (label.length() > 2 ? 20 : 11), y + 6, WHITE);
+                x + width / 2, y + 6, WHITE);
     }
 
     private void renderEquipment(DrawContext context, MinecraftClient client) {
@@ -89,24 +128,18 @@ public class HudRenderer implements HudRenderCallback {
         int y = thisHeight(client) - 80;
         for (int i = 3; i >= 0; i--) {
             ItemStack stack = client.player.getInventory().getArmorStack(i);
-            if (CosmicTweaksClient.CONFIG.showArmor) {
-                context.drawItem(stack, x, y);
-            }
-            if (CosmicTweaksClient.CONFIG.showDurability && !stack.isEmpty() && stack.isDamageable()) {
+            if (ModuleManager.armor()) context.drawItem(stack, x, y);
+            if (ModuleManager.durability() && !stack.isEmpty() && stack.isDamageable()) {
                 int remaining = stack.getMaxDamage() - stack.getDamage();
-                drawText(context, String.valueOf(remaining), x + 18, y + 16, remaining < 20 ? 0xFFFFB4B4 : MUTED);
+                drawText(context, String.valueOf(remaining), x + 18, y + 16,
+                        remaining < 20 ? 0xFFFFB4B4 : MUTED);
             }
             y += 20;
         }
     }
 
-    private int thisWidth(MinecraftClient client) {
-        return client.getWindow().getScaledWidth();
-    }
-
-    private int thisHeight(MinecraftClient client) {
-        return client.getWindow().getScaledHeight();
-    }
+    private int thisWidth(MinecraftClient client) { return client.getWindow().getScaledWidth(); }
+    private int thisHeight(MinecraftClient client) { return client.getWindow().getScaledHeight(); }
 
     private void drawText(DrawContext context, String text, int x, int y, int color) {
         context.drawText(MinecraftClient.getInstance().textRenderer, text, x, y, color, true);
