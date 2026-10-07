@@ -30,6 +30,15 @@ public class CosmicConfig {
     public boolean sprintToggle = true;
     public boolean sneakToggle = true;
     public boolean freelook = false;
+
+    // Performance profile toggles. These are deliberately opt-in until their
+    // client-specific render hooks are installed, so enabling them cannot
+    // unexpectedly change vanilla rendering.
+    public boolean performanceProfile = false;
+    public boolean reduceParticles = false;
+    public boolean reduceEntityRenderDistance = false;
+    public boolean hideCosmetics = false;
+
     public double zoomFov = 30.0;
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
