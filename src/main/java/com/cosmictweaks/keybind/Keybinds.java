@@ -19,7 +19,7 @@ public final class Keybinds {
     public static KeyBinding openSettings;
     private static final KeyBinding.Category CATEGORY =
             KeyBinding.Category.create(Identifier.of(CosmicTweaks.MOD_ID, "main"));
-    private static double savedFov = -1.0;
+    private static int savedFov = -1;
 
     private Keybinds() {}
 
@@ -40,11 +40,16 @@ public final class Keybinds {
 
             boolean zooming = CosmicTweaksClient.CONFIG.showZoom && toggleZoom.isPressed();
             if (zooming && client.currentScreen == null) {
-                if (savedFov < 0.0) savedFov = client.options.getFov().getValue();
-                client.options.getFov().setValue(Math.max(20.0, Math.min(savedFov, CosmicTweaksClient.CONFIG.zoomFov)));
-            } else if (savedFov >= 0.0) {
+                if (savedFov < 0) {
+                    savedFov = client.options.getFov().getValue();
+                }
+
+                int targetFov = (int) Math.round(CosmicTweaksClient.CONFIG.zoomFov);
+                targetFov = Math.max(20, Math.min(savedFov, targetFov));
+                client.options.getFov().setValue(targetFov);
+            } else if (savedFov >= 0) {
                 client.options.getFov().setValue(savedFov);
-                savedFov = -1.0;
+                savedFov = -1;
             }
 
             if (openSettings.wasPressed() && !(client.currentScreen instanceof CosmicSettingsScreen)) {
@@ -59,6 +64,7 @@ public final class Keybinds {
 
     private static final class ScreenOpener {
         private ScreenOpener() {}
+
         private static void open(MinecraftClient client) {
             Screen previous = client.currentScreen;
             client.setScreen(new CosmicSettingsScreen(previous));
