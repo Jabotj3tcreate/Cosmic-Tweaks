@@ -33,6 +33,8 @@ public final class Keybinds {
                 "key.cosmictweaks.settings", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, CATEGORY));
         openHudEditor = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.cosmictweaks.hud_editor", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_H, CATEGORY));
+        freelook = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.cosmictweaks.freelook", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (toggleFullbright.wasPressed()) {
