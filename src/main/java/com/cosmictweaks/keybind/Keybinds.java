@@ -18,6 +18,8 @@ public final class Keybinds {
     public static KeyBinding toggleZoom;
     public static KeyBinding openSettings;
     public static KeyBinding openHudEditor;
+    public static KeyBinding freelook;
+
     private static final KeyBinding.Category CATEGORY =
             KeyBinding.Category.create(Identifier.of(CosmicTweaks.MOD_ID, "main"));
     private static int savedFov = -1;
