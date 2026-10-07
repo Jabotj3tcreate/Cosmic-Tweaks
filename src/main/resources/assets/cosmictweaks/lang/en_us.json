@@ -1,9 +1,8 @@
 {
-  "category": "key.categories.cosmictweaks",
-  "keys": {
-    "key.cosmictweaks.fullbright": "Toggle Fullbright",
-    "key.cosmictweaks.zoom": "Toggle Zoom",
-    "key.cosmictweaks.settings": "Open Cosmic Settings",
-    "category.cosmictweaks": "Cosmic Tweaks"
-  }
+  "key.categories.cosmictweaks": "Cosmic Tweaks",
+  "key.cosmictweaks.fullbright": "Toggle Fullbright",
+  "key.cosmictweaks.zoom": "Zoom",
+  "key.cosmictweaks.settings": "Open Cosmic Settings",
+  "key.cosmictweaks.hud_editor": "Open HUD Editor",
+  "key.cosmictweaks.freelook": "Freelook"
 }
