@@ -33,45 +33,43 @@ public class HudRenderer implements HudRenderCallback {
         if (client == null || client.player == null || client.world == null) return;
 
         updateClicks(client);
-        int x = 8;
-        int y = 8;
 
-        if (ModuleManager.fps()) {
-            drawText(context, "FPS  " + client.getCurrentFps(), x, y, WHITE);
-            y += 12;
-        }
+        if (ModuleManager.fps()) drawText(context, "FPS  " + client.getCurrentFps(), position("FPS", 8, 8).x, position("FPS", 8, 8).y, WHITE);
+
         if (ModuleManager.ping()) {
             int ping = 0;
             if (client.getNetworkHandler() != null) {
                 var entry = client.getNetworkHandler().getPlayerListEntry(client.player.getUuid());
                 if (entry != null) ping = entry.getLatency();
             }
-            drawText(context, "PING  " + ping + "ms", x, y, WHITE);
-            y += 12;
-        }
-        if (ModuleManager.coordinates()) {
-            BlockPos pos = client.player.getBlockPos();
-            drawText(context, "XYZ  " + pos.getX() + "  " + pos.getY() + "  " + pos.getZ(), x, y, WHITE);
-            y += 12;
-        }
-        if (CosmicTweaksClient.CONFIG.showCompass) {
-            drawText(context, "FACING  " + getFacing(client), x, y, MUTED);
-            y += 12;
-        }
-        if (CosmicTweaksClient.CONFIG.showClock) {
-            long time = client.world.getTimeOfDay() % 24000L;
-            drawText(context, "WORLD  " + String.format("%05d", time), x, y, MUTED);
+            drawText(context, "PING  " + ping + "ms", position("PING", 8, 20).x, position("PING", 8, 20).y, WHITE);
         }
 
-        if (ModuleManager.keystrokes()) {
-            renderKeystrokes(context, client);
+        if (ModuleManager.coordinates()) {
+            BlockPos pos = client.player.getBlockPos();
+            drawText(context, "XYZ  " + pos.getX() + "  " + pos.getY() + "  " + pos.getZ(),
+                    position("COORDINATES", 8, 32).x, position("COORDINATES", 8, 32).y, WHITE);
         }
-        if (ModuleManager.cps()) {
-            renderCps(context, client);
+
+        if (CosmicTweaksClient.CONFIG.showCompass) {
+            drawText(context, "FACING  " + getFacing(client),
+                    position("FACING", 8, 44).x, position("FACING", 8, 44).y, MUTED);
         }
-        if (ModuleManager.armor() || ModuleManager.durability()) {
-            renderEquipment(context, client);
+
+        if (CosmicTweaksClient.CONFIG.showClock) {
+            long time = client.world.getTimeOfDay() % 24000L;
+            drawText(context, "WORLD  " + String.format("%05d", time),
+                    position("CLOCK", 8, 56).x, position("CLOCK", 8, 56).y, MUTED);
         }
+
+        if (ModuleManager.keystrokes()) renderKeystrokes(context, client);
+        if (ModuleManager.cps()) renderCps(context, client);
+        if (ModuleManager.armor() || ModuleManager.durability()) renderEquipment(context, client);
+    }
+
+    private HudLayout.ModulePosition position(String id, double defaultX, double defaultY) {
+        HudLayout.ModulePosition p = HudLayout.get(id, defaultX, defaultY);
+        return p.visible ? p : new HudLayout.ModulePosition(-1000, -1000);
     }
 
     private void updateClicks(MinecraftClient client) {
@@ -92,15 +90,15 @@ public class HudRenderer implements HudRenderCallback {
     }
 
     private void renderCps(DrawContext context, MinecraftClient client) {
-        int x = 8;
-        int y = thisHeight(client) - 102;
-        drawText(context, "LMB " + LEFT_CLICKS.size() + " CPS", x, y, WHITE);
-        drawText(context, "RMB " + RIGHT_CLICKS.size() + " CPS", x, y + 12, MUTED);
+        HudLayout.ModulePosition p = position("CPS", 8, thisHeight(client) - 102);
+        drawText(context, "LMB " + LEFT_CLICKS.size() + " CPS", (int)p.x, (int)p.y, WHITE);
+        drawText(context, "RMB " + RIGHT_CLICKS.size() + " CPS", (int)p.x, (int)p.y + 12, MUTED);
     }
 
     private void renderKeystrokes(DrawContext context, MinecraftClient client) {
-        int x = 8;
-        int y = thisHeight(client) - 78;
+        HudLayout.ModulePosition p = position("KEYSTROKES", 8, thisHeight(client) - 78);
+        int x = (int)p.x;
+        int y = (int)p.y;
         int size = 22;
         drawKey(context, client, x + size, y, "W", GLFW.GLFW_KEY_W);
         drawKey(context, client, x, y + size, "A", GLFW.GLFW_KEY_A);
@@ -123,11 +121,10 @@ public class HudRenderer implements HudRenderCallback {
     }
 
     private void renderEquipment(DrawContext context, MinecraftClient client) {
-        int x = thisWidth(client) - 92;
-        int y = thisHeight(client) - 80;
-        EquipmentSlot[] armorSlots = {
-                EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
-        };
+        HudLayout.ModulePosition p = position("EQUIPMENT", thisWidth(client) - 92, thisHeight(client) - 80);
+        int x = (int)p.x;
+        int y = (int)p.y;
+        EquipmentSlot[] armorSlots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         for (EquipmentSlot slot : armorSlots) {
             ItemStack stack = client.player.getEquippedStack(slot);
             if (ModuleManager.armor()) context.drawItem(stack, x, y);
